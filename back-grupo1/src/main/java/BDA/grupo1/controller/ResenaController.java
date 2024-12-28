@@ -14,22 +14,22 @@ public class ResenaController {
     @Autowired
     private ResenaService resenaService;
 
-    @PostMapping
+    @PostMapping("/crear")
     public Resena crearResena(@RequestBody Resena resena) {
         return resenaService.crearResena(resena);
     }
 
-    @GetMapping
+    @GetMapping("/All")
     public List<Resena> obtenerResenas() {
         return resenaService.obtenerResenas();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/findById/{id}")
     public Resena obtenerResenaPorId(@PathVariable String id) {
         return resenaService.obtenerResenaPorId(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void eliminarResena(@PathVariable String id) {
         resenaService.eliminarResena(id);
     }
