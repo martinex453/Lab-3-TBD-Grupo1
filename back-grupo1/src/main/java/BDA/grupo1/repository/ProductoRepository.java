@@ -13,4 +13,5 @@ public interface ProductoRepository {
     public Producto getproductoById(Integer id);
     public void updateProductoStock(Integer id, Integer stock);
     public Integer getTotalPages(Integer pageSize);
+    public List<Producto> getProductosAleatoreosByCategoria(Integer IdCategoria);
 }

@@ -47,4 +47,8 @@ public class ProductoService {
     public void updateProductoStock(Integer id, Integer stock) { productoRepository.updateProductoStock(id, stock); }
 
     public Integer getTotalPages(Integer pageSize){ return productoRepository.getTotalPages(pageSize); }
+
+    public List<Producto> getProductosAleatoreosByCategoria(Integer idCategoria) {
+        return productoRepository.getProductosAleatoreosByCategoria(idCategoria);
+    }
 }

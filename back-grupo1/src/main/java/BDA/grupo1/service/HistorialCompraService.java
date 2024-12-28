@@ -1,17 +1,31 @@
 package BDA.grupo1.service;
 
 import BDA.grupo1.model.HistorialCompra;
+import BDA.grupo1.model.Producto;
 import BDA.grupo1.repository.HistorialCompraRepository;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class HistorialCompraService {
 
     @Autowired
     private HistorialCompraRepository historialCompraRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    @Autowired
+    private ProductoService productoService;
 
     public HistorialCompra guardarHistorialCompra(Integer idUsuario, HistorialCompra.Compra nuevaCompra) {
         // Buscar el historial de compras del usuario
@@ -73,5 +87,47 @@ public class HistorialCompraService {
         // Guardar el historial actualizado
         return historialCompraRepository.save(historial);
     }
+
+    public List<Producto> obtenerCategoriasMasFrecuentes(Integer idUsuario) {
+        // Crear el pipeline de agregación
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("_id").is(idUsuario)), // Filtrar por usuario
+                Aggregation.unwind("compras"), // Descomponer el array de compras
+                Aggregation.unwind("compras.productos"), // Descomponer el array de productos
+                Aggregation.group("compras.productos.categoria") // Agrupar por categoría
+                        .count().as("frecuencia"),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "frecuencia")), // Ordenar por frecuencia
+                Aggregation.limit(2) // Limitar a las dos categorías más frecuentes
+        );
+
+        System.out.println(aggregation);
+
+        // Ejecutar el pipeline
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "historial_compras", Document.class);
+        System.out.println(results);
+        // Retornar las categorías más frecuentes
+        List<Document> categoriasFrecuentes = results.getMappedResults();
+        List<Integer> categoriaIds = new ArrayList<>();
+
+        for (Document doc : categoriasFrecuentes) {
+            Integer categoriaId = doc.getInteger("_id"); // '_id' contiene el ID de la categoría
+            if (categoriaId != null) {
+                categoriaIds.add(categoriaId);
+            }
+        }
+        System.out.println(categoriaIds);
+
+        List<Producto> productos = new ArrayList<>();
+        // Retornar la lista con los Ids de las categorías
+        for(Integer categoria : categoriaIds) {
+            List<Producto> productosCat = productoService.getProductosAleatoreosByCategoria(categoria);
+            System.out.println(productosCat);
+            productos.addAll(productosCat);
+        }
+
+
+        return productos;
+    }
+
 
 }

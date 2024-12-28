@@ -132,4 +132,17 @@ public class ProductoRepositoryImp implements ProductoRepository{
         }
     }
 
+    public List<Producto> getProductosAleatoreosByCategoria(Integer id_categoria){
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT * FROM producto WHERE id_categoria = :id_categoria AND estado = :estado ORDER BY RANDOM() LIMIT 2";
+            return con.createQuery(sql)
+                    .addParameter("id_categoria", id_categoria)
+                    .addParameter("estado", "disponible")
+                    .executeAndFetch(Producto.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 }
