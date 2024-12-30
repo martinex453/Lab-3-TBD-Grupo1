@@ -17,23 +17,25 @@ import java.util.List;
 @AllArgsConstructor
 public class HistorialCompra {
     @Id
+    private ObjectId id;
+
     private Integer idCliente;
     private List<Compra> compras;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Compra{
+    public static class Compra {
         private Integer idOrden;
         private Date fecha;
-        private List<Producto> productos;
         private String estado;
         private Double valorTotal;
+        private List<Producto> productos;
 
         @Data
         @AllArgsConstructor
         @NoArgsConstructor
-        public static class Producto{
+        public static class Producto {
             private Integer idProducto;
             private Integer cantidad;
             private Double precio;

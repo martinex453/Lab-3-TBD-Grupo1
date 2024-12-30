@@ -3,20 +3,21 @@ package BDA.grupo1.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "resenas") // Define el nombre de la colección en MongoDB
+@Document(collection = "resenas")
 public class Resena {
 
     @Id
-    private String id; // ObjectID, se generará automáticamente si no se establece
+    private ObjectId id;
 
-    private Integer idUsuario; // ID del usuario asociado a la reseña
-    private Integer idProducto; // ID del producto al que pertenece la reseña
-    private Integer puntuacion; // Puntuación (por ejemplo, 1-5 estrellas)
-    private String comentario; // Comentario del usuario sobre el producto
+    private Integer idUsuario;
+    private Integer idProducto;
+    private Integer puntuacion;
+    private String comentario;
 }

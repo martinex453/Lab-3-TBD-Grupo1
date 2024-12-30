@@ -3,14 +3,10 @@ package BDA.grupo1.service;
 import BDA.grupo1.model.HistorialCompra;
 import BDA.grupo1.model.Producto;
 import BDA.grupo1.repository.HistorialCompraRepository;
+import BDA.grupo1.repository.HistorialCompraRepositoryCustom;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,12 +19,13 @@ public class HistorialCompraService {
     private HistorialCompraRepository historialCompraRepository;
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private HistorialCompraRepositoryCustom historialCompraRepositoryCustom;
+
     @Autowired
     private ProductoService productoService;
 
     public HistorialCompra guardarHistorialCompra(Integer idUsuario, HistorialCompra.Compra nuevaCompra) {
-        // Buscar el historial de compras del usuario
+
         HistorialCompra historial = historialCompraRepository.findByIdCliente(idUsuario);
 
         // Si no existe el historial de compras, creamos uno nuevo
@@ -56,7 +53,6 @@ public class HistorialCompraService {
             historial.getCompras().add(nuevaCompra);
         }
 
-        // Guardar el historial actualizado
         return historialCompraRepository.save(historial);
     }
 
@@ -66,12 +62,10 @@ public class HistorialCompraService {
     }
 
     public HistorialCompra actualizarEstadoCompra(Integer idUsuario, Integer idOrden, String nuevoEstado) {
-        // Buscar el historial de compras del usuario
         HistorialCompra historial = historialCompraRepository.findByIdCliente(idUsuario);
 
-        // Si no existe el historial de compras, devolvemos null o lanzamos una excepción según el caso
+        // Si no existe el historial de compras
         if (historial == null) {
-            // Podrías lanzar una excepción o devolver un valor adecuado (null en este caso)
             return null;
         }
 
@@ -83,30 +77,12 @@ public class HistorialCompraService {
                 break;
             }
         }
-
-        // Guardar el historial actualizado
         return historialCompraRepository.save(historial);
     }
 
     public List<Producto> obtenerCategoriasMasFrecuentes(Integer idUsuario) {
-        // Crear el pipeline de agregación
-        Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("_id").is(idUsuario)), // Filtrar por usuario
-                Aggregation.unwind("compras"), // Descomponer el array de compras
-                Aggregation.unwind("compras.productos"), // Descomponer el array de productos
-                Aggregation.group("compras.productos.categoria") // Agrupar por categoría
-                        .count().as("frecuencia"),
-                Aggregation.sort(Sort.by(Sort.Direction.DESC, "frecuencia")), // Ordenar por frecuencia
-                Aggregation.limit(2) // Limitar a las dos categorías más frecuentes
-        );
 
-        System.out.println(aggregation);
-
-        // Ejecutar el pipeline
-        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "historial_compras", Document.class);
-        System.out.println(results);
-        // Retornar las categorías más frecuentes
-        List<Document> categoriasFrecuentes = results.getMappedResults();
+        List<Document> categoriasFrecuentes = historialCompraRepositoryCustom.obtenerCategoriasMasFrecuentes(idUsuario);
         List<Integer> categoriaIds = new ArrayList<>();
 
         for (Document doc : categoriasFrecuentes) {
@@ -115,13 +91,11 @@ public class HistorialCompraService {
                 categoriaIds.add(categoriaId);
             }
         }
-        System.out.println(categoriaIds);
 
         List<Producto> productos = new ArrayList<>();
-        // Retornar la lista con los Ids de las categorías
+        // Obtener productos random con ids de categorias
         for(Integer categoria : categoriaIds) {
             List<Producto> productosCat = productoService.getProductosAleatoreosByCategoria(categoria);
-            System.out.println(productosCat);
             productos.addAll(productosCat);
         }
 

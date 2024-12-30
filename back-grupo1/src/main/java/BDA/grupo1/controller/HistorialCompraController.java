@@ -15,7 +15,7 @@ public class HistorialCompraController {
     @Autowired
     private HistorialCompraService historialCompraService;
 
-    @PostMapping("/{idUsuario}/compras")
+    @PostMapping("/{idUsuario}")
     public HistorialCompra agregarCompra(@PathVariable int idUsuario, @RequestBody HistorialCompra.Compra compra) {
         return historialCompraService.guardarHistorialCompra(idUsuario,compra);
     }
@@ -30,10 +30,9 @@ public class HistorialCompraController {
         return historialCompraService.actualizarEstadoCompra(idUsuario, idOrden, estado);
     }
 
-    @GetMapping("/historial/recomandaciones/{idUsuario}")
+    @GetMapping("/historial/recomendaciones/{idUsuario}")
     public List<Producto> obtenerRecomendaciones(@PathVariable Integer idUsuario) {
         List<Producto> recomendaciones = historialCompraService.obtenerCategoriasMasFrecuentes(idUsuario);
-
         return recomendaciones;
     }
 }
