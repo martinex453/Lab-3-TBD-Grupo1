@@ -7,6 +7,7 @@ import OrderDetail from '../components/OrderDetail.vue';
 import MyOrders from '../components/MyOrders.vue';
 import EditProduct from '../components/EditProduct.vue';
 import ProcedimientosAlmacenados from '../components/ProcedimientosAlmacenados.vue';
+import Comment from '../components/Comment.vue';
 
 //Definir las rutas de la aplicacion
 const routes = [
@@ -45,6 +46,12 @@ const routes = [
         name: 'editProduct',
         component: EditProduct,
         meta: { requiresAuth: true}
+    },
+    {
+      path: '/comment/:id',
+      name: 'Comment',
+      component: Comment,
+      meta: { requiresAuth: true}
     },
     {
         path: '/myOrders',

@@ -65,7 +65,8 @@ export default {
             latitud: -33.4497846,
             longitud: -70.6898598,
             coord_act: 0,
-            debounceTimer: null
+            debounceTimer: null,
+            totalAux: 0
         };
     },
     methods: {
@@ -95,20 +96,16 @@ export default {
                     id_producto: Number(this.$carrito[i][0]),
                     cantidad: this.$carrito[i][1],
                     precio_unitario: this.$carrito[i][2],
-
                 }
                 carritoJson.push(productoCarrito);
             }
-            /*const ubicacion = {
-                latitud: this.latitud,
-                longitud: this.longitud,
-            }
-            const body = {
-                carrito: carritoJson,
-                ubicacion: ubicacion,
-            }*/
+
             //Enviar la orden de compra al servidor
             await orderService.submitOrder(carritoJson, this.idUser, this.token, this.longitud, this.latitud);
+            
+            //Agregar la orden de compra al historial            
+            await this.Historial(this.idUser);
+
             alert("Orden realizada con éxito");
             //Limpiar el carrito de compras
             this.$carrito.splice(0, this.$carrito.length);
@@ -117,6 +114,34 @@ export default {
             //Obtener los nombres de los productos y calcular el precio total
             await this.fetchProductNames();
             this.calculateTotalPrice();
+            
+        },
+        async Historial(idUser) {
+            const carritoHistorial = [];
+            for (let i = 0; i < this.$carrito.length; i++) {
+                const categoriaAux = await productService.getCategoriaId(Number(this.$carrito[i][0]), this.token);
+                
+                const productoCarrito2 = {
+                    idProducto: parseInt(this.$carrito[i][0]),
+                    idProducto: Number(this.$carrito[i][0]),
+                    cantidad: this.$carrito[i][1],
+                    precio: this.$carrito[i][2],
+                    categoria: categoriaAux.data,
+                }
+                carritoHistorial.push(productoCarrito2);
+            }
+
+            const parametros = await orderService.getParametrosOrden(this.idUser, this.token);
+
+            const compra = {
+                idOrden: parametros.data.id_orden,
+                fecha: parametros.data.fecha_orden,
+                estado: parametros.data.estado,
+                valorTotal: this.totalAux,
+                productos: carritoHistorial,
+            }
+
+            await orderService.agregarHistorial(idUser, compra, this.token);
         },
         loadCart() {
             //Obtener el carrito de compras del almacenamiento local
@@ -260,6 +285,7 @@ export default {
         this.loadCart();
         await this.fetchProductNames();
         this.calculateTotalPrice();
+        this.totalAux = this.totalPrice;
     },
     async mounted() {
         try {

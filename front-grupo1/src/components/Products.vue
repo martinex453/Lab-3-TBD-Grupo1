@@ -17,16 +17,30 @@
             <button v-for="p in visiblePages" :key="p" @click="goToPage(p)" class="pageButton">{{ p }}</button>
             <button v-if="showNextButton" @click="changePage(page + 1)" class="pageButton">Sig</button>
         </div>
+        <h1 class="title1" v-if="!isEmptyRecomendations">Productos Recomendados</h1>
+        <div class="selected-products-list">
+            <div class="product-item" v-for="product in selectedProducts" :key="product.id">
+                <img class="product-img" src="./images/caja.png" alt="Producto" />
+                <h2>{{ product.nombre }}</h2>
+                <p>{{ product.descripcion }}</p>
+                <h3>Precio: ${{ product.precio }} CLP</h3>
+                <h4>Stock: {{ product.stock === 0 ? 'Producto no disponible' : product.stock }}</h4>
+                <button class="purchase-button" v-if="product.stock > 0" @click="productDetails(product)">Comprar</button>
+                <button v-if="this.isAdmin" class="edit-button" @click="editProduct(product.id_producto)">Editar</button>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import { isEmpty } from 'lodash';
 import productService from '../services/productService.js';
 
 export default {
     //Definir las propiedades del componente
     data() {
         return {
+            selectedProducts: [],
             products: [],
             page: 1,
             pageSize: 12,
@@ -44,6 +58,9 @@ export default {
             //Verificar si se puede mostrar el botón de página siguiente
             return this.page <= this.numberOfPages - 1;
         },
+        isEmptyRecomendations() {
+            return isEmpty(this.selectedProducts);
+        }
     },
     methods: {
         async getProducts() {
@@ -89,11 +106,22 @@ export default {
             //Redirigir al usuario a la página de edición del producto
             this.$router.push(`/edit-product/${productId}`);
         },
+        async getSelectedProducts(){
+            try {
+                const token = this.$cookies.get("jwt");
+                const userId = localStorage.getItem("idUser");
+                const response = await productService.getRecomendaciones(userId, token);
+                this.selectedProducts = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
     },
     mounted() {
         //Obtener los productos al cargar el componente
         this.getProducts();
         this.numberPages();
+        this.getSelectedProducts();
     },
 };
 </script>
@@ -109,14 +137,18 @@ export default {
     width: 100%;
 }
 
-.title {
+.title, .title1 {
     font-size: 24px;
     color: #333;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.products-list {
+.title1 {
+    margin-top: 20px;
+}
+
+.products-list, .selected-products-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;

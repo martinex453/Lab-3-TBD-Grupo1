@@ -91,6 +91,33 @@ const getNumberOfPagesAdmin = (pageSize, token) => {
     });
 }
 
+const agregarHistorial = (idUser, compra, token) => {
+    //Agregar orden al historial
+    return httpClient.post(`/historialCompras/${idUser}`, compra, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+const getParametrosOrden = (id, token) => {
+    //Obtener parametros de una orden
+    return httpClient.get(`/orden/getParametros/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+const updateHistorial = (idUser, idOrden, estado , token) => {
+    //Actualizar historial
+    return httpClient.post(`/historialCompras/updateCompra/${idUser}/${idOrden}/${estado}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
 export default {
     makeOrder,
     getOrderByUserId,
@@ -101,5 +128,8 @@ export default {
     getOrders,
     verificarZona,
     getNumberOfPages,
-    getNumberOfPagesAdmin
+    getNumberOfPagesAdmin,
+    agregarHistorial,
+    getParametrosOrden,
+    updateHistorial,
 };

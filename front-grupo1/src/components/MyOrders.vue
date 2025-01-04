@@ -82,11 +82,11 @@ export default {
         },
         async sendOrder(order) {
             try {
-                //Cambiar el estado de la orden a 'enviada'
-                console.log(order);
                 order.estado = 'enviada';
-                console.log(order);
                 await orderService.updateOrder(order.id_orden, order, this.id_user, this.token);
+                //Actualizar parametro del historial
+                await orderService.updateHistorial(order.id_cliente, order.id_orden, "enviada", this.token);
+
                 //Generar tupla orden repartidor
                 const id_repartidor_random = await repartidorService.getRepartidorRandom(this.token);
                 const orderRepartidor = {

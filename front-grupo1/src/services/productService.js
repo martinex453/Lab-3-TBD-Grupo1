@@ -64,6 +64,33 @@ const getNumberOfPages = (pageSize, token) => {
     });
 }
 
+const submitReview = (resena, token) => {
+    //Agregar review al producto
+    return httpClient.post(`/resenas/crear`, resena, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+const getRecomendaciones = (idUsuario, token) => {
+    //Trae productos recomendados para el user
+    return httpClient.get(`/historialCompras/historial/recomendaciones/${idUsuario}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+const getCategoriaId = (id_categoria, token) => {
+    //Obtener producto por su id
+    return httpClient.get(`/producto/getCategoriaId/${id_categoria}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
 export default {
     getProductById,
     updateProduct,
@@ -71,5 +98,8 @@ export default {
     updateStock,
     getPoductsForPages,
     applyDiscount,
-    getNumberOfPages
+    getNumberOfPages,
+    submitReview,
+    getRecomendaciones,
+    getCategoriaId
 };

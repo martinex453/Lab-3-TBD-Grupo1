@@ -13,6 +13,7 @@
                         <th>Producto</th>
                         <th>Cantidad</th>
                         <th>Precio Unitario</th>
+                        <th v-if="userRol != 'admin'"> Valorar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,6 +21,9 @@
                         <td>{{ detail.name }}</td>
                         <td>{{ detail.cantidad }}</td>
                         <td>{{ detail.precio_unitario }}</td>
+                        <td v-if="userRol != 'admin'">
+                            <button @click="goToComment(detail.id_producto)">Valorar</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -43,7 +47,10 @@ export default {
             totalOrderDetail: [],
             totalPrice: 0,
             token: this.$cookies.get("jwt"),
-            orderStatus: ''
+            orderStatus: '',
+            rating: 0,
+            reviewComment: '',
+            userRol: localStorage.getItem("userRole"),
         };
     },
     methods: {
@@ -78,8 +85,12 @@ export default {
                 //Mostrar un mensaje de error si no se pueden obtener los detalles de la orden de compra
                 alert('Error al obtener detalle de orden');
             }
-        }
+        },
+        goToComment(id){
+            this.$router.push(`/comment/${id}`)
+        },
     },
+    
     created() {
         //Obtener los detalles de la orden de compra al cargar el componente
         this.getTotalOrderDetail();
@@ -167,4 +178,5 @@ button {
 button:hover {
     background-color: #2563eb;
 }
+
 </style>
