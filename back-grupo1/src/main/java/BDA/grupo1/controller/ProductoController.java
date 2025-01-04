@@ -63,4 +63,7 @@ public class ProductoController {
     public Integer getTotalPages(@PathVariable Integer pageSize) {
         return productoService.getTotalPages(pageSize);
     }
+
+    @GetMapping("/producto/getCategoriaId/{id_producto}")
+    public Integer getCategoriaId(@PathVariable Integer id_producto) { return productoService.getCategoriaId(id_producto); }
 }

@@ -51,4 +51,7 @@ public class ProductoService {
     public List<Producto> getProductosAleatoreosByCategoria(Integer idCategoria) {
         return productoRepository.getProductosAleatoreosByCategoria(idCategoria);
     }
+
+    // servicio para obtener el id_categoria de un producto según su id
+    public Integer getCategoriaId(Integer id_producto) { return productoRepository.getCategoriaId(id_producto); }
 }

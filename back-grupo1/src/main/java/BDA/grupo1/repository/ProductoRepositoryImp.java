@@ -145,4 +145,16 @@ public class ProductoRepositoryImp implements ProductoRepository{
         }
     }
 
+    public Integer getCategoriaId(Integer id_producto){
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT id_categoria FROM producto WHERE id_producto = :id_producto";
+            return con.createQuery(sql)
+                    .addParameter("id_producto", id_producto)
+                    .executeScalar(Integer.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 }
