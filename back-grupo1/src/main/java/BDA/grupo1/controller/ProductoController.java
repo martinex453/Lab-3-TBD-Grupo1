@@ -37,7 +37,9 @@ public class ProductoController {
 
     @GetMapping("/producto/get/{id}")
     public Producto getproductoById(@PathVariable Integer id){
-        return productoService.getproductoById(id);
+        Producto prod = productoService.getproductoById(id);
+        System.out.println(prod);
+        return prod;
     }
 
     @DeleteMapping("/producto/delete/{id}")
