@@ -82,4 +82,9 @@ public class OrdenController {
     public Integer getOrdenTotalPagesUser(@PathVariable Integer User, @PathVariable Integer pageSize) {
         return ordenService.getOrdersTotalPagesUser(User,pageSize);
     }
+
+    @GetMapping("/orden/getParametros/{id}")
+    public Orden getLastOrdenByUser(@PathVariable Integer id) {
+        return ordenService.getLastOrdenByUser(id);
+    }
 }

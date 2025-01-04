@@ -81,4 +81,6 @@ public class OrdenService {
 
     public Integer getOrdersTotalPagesUser(Integer User, Integer pageSize){ return ordenRepository.getOrdersTotalPagesUser(User,pageSize); }
 
+    // Servicio para obtener id_orden, fecha y estado
+    public Orden getLastOrdenByUser(Integer id){ return ordenRepository.getLastOrdenByUser(id); }
 }

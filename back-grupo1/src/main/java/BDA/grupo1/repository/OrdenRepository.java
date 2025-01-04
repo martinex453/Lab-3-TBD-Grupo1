@@ -21,4 +21,5 @@ public interface OrdenRepository {
     public Integer getOrdersTotalPages(Integer pageSize);
     public Integer getOrdersTotalPagesUser(Integer User, Integer pageSize);
     public Boolean getIfPointIsInDeliveryZone(Double x, Double y);
+    public Orden getLastOrdenByUser(Integer id);
 }

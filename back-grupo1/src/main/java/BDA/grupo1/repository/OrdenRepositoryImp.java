@@ -209,4 +209,23 @@ public class OrdenRepositoryImp implements OrdenRepository{
             return 0;
         }
     }
+
+    public Orden getLastOrdenByUser(Integer id_cliente) {
+        try (Connection con = sql2o.open()) {
+            String sql = "SELECT id_orden, fecha_orden, estado " +
+                    "FROM orden " +
+                    "WHERE id_orden = (" +
+                    "    SELECT MAX(id_orden) " +
+                    "    FROM orden " +
+                    "    WHERE id_cliente = :id_cliente" +
+                    ")";
+
+            return con.createQuery(sql)
+                    .addParameter("id_cliente", id_cliente)
+                    .executeAndFetchFirst(Orden.class); // Obtiene el último registro como un objeto Orden
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
