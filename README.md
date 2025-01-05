@@ -55,6 +55,7 @@ Esto creará la estructura de la base de datos necesaria para la aplicación.
 3. Configurar la base de datos NoSQL
 * Abre MongoDB Compass y crea una nueva conexion en localhost:27017
 * Crea una nueva base de datos con el nombre "lab3"
+
 Esto creará la base de datos NoSQL necesaria para la aplicación.
 
 4. Ejecutar el backend
