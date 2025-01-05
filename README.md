@@ -1,8 +1,8 @@
 # Laboratorio 3 - TDB - Grupo 1
-Este repositorio contiene todos los archivos relacionados con el Laboratorio N°3 del Laboratorio de Base de Datos Avanzadas desarrollado por el grupo 1.
+Este repositorio contiene todos los archivos relacionados con el Laboratorio N°3 de Base de Datos Avanzadas desarrollado por el grupo 1.
 
 **IMPORTANTE:** 
-- Para poder conectarse correctamente con la base de datos y el backend, asegurate de lo siguientes:
+- Para poder conectarse correctamente con la base de datos y el backend, asegurate de lo siguiente:
     1. Configura el archivo application.properties en la carpeta resources del backend:
         * Actualiza el usuario y contraseña de PostgreSQL. (usuario: postgres, contraseña: password por defecto)
         * Ajusta el puerto de conexión de la base de datos SQL (5433 por defecto).
