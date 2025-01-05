@@ -7,7 +7,7 @@ Este repositorio contiene todos los archivos relacionados con el Laboratorio N°
         * Actualiza el usuario y contraseña de PostgreSQL. (usuario: postgres, contraseña: password por defecto)
         * Ajusta el puerto de conexión de la base de datos SQL (5433 por defecto).
         * Configura el puerto donde estará disponible la aplicación Spring Boot (8090 por defecto).
-        * Ajustar el puerto de conexion de la base de datos NoSQL (27014 por defecto).
+        * Ajustar el puerto de conexion de la base de datos NoSQL (27017 por defecto).
     
     2. En caso de modificar la dirección del servidor o el puerto en application.properties, actualiza también el archivo .env en el frontend para asegurar que ambos coincidan.
 
